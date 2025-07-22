@@ -92,23 +92,27 @@ class PersonOverviewController():
   def handleNewPerson(action: ActionEvent) =
     val person = new Person("", "")
     val okClicked = MainApp.showPersonEditDialog(person);
-    if (okClicked) then
+    if (okClicked) then {
       MainApp.personData += person
+      person.save()
+    }
+
   @FXML
   def handleEditPerson(action: ActionEvent) =
     val selectedPerson = personTable.selectionModel().selectedItem.value
     if (selectedPerson != null) then
       val okClicked = MainApp.showPersonEditDialog(selectedPerson)
 
-      if (okClicked) then showPersonDetails(Some(selectedPerson))
-
-    else
+      if (okClicked) then {
+        showPersonDetails(Some(selectedPerson))
+        selectedPerson.save()
+      } else
       // Nothing selected.
-      val alert = new Alert(Alert.AlertType.Warning):
-        initOwner(MainApp.stage)
-        title = "No Selection"
-        headerText = "No Person Selected"
-        contentText = "Please select a person in the table."
-      .showAndWait() 
+        val alert = new Alert(Alert.AlertType.Warning):
+          initOwner(MainApp.stage)
+          title = "No Selection"
+          headerText = "No Person Selected"
+          contentText = "Please select a person in the table."
+        .showAndWait()
 
 
